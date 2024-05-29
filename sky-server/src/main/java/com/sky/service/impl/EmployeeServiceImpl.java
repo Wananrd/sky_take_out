@@ -90,14 +90,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         //设置账号密码，默认 123456(MD5加密)
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
 
-        //设置当前记录的创建时间和更新时间
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
-
-        //改为当前登录用户id
-        employee.setCreateUser(BaseContext.getCurrentId());
-        employee.setUpdateUser(BaseContext.getCurrentId());
-
         employeeMapper.insert(employee);
     }
 
@@ -108,15 +100,14 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
-        //开始分页查询
+        //1.设置分页参数
         PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
-
-        Page<Employee> page = employeeMapper.pageQuery(employeePageQueryDTO);
-
-        long total = page.getTotal();
-        List<Employee> records = page.getResult();
-
-        return new PageResult(total, records);
+        //2.执行查询
+        List<Employee> employeeList = employeeMapper.pageQuery(employeePageQueryDTO);
+        Page<Employee> page = (Page<Employee>) employeeList;
+        //3.封装pageBean
+        PageResult pageResult = new PageResult(page.getTotal(), page.getResult());
+        return pageResult;
     }
 
     /**
@@ -132,9 +123,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setId(id);
         employee.setStatus(status);
 
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(BaseContext.getCurrentId());
-
         employeeMapper.update(employee);
     }
 
@@ -147,9 +135,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void edit(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO, employee);
-
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.update(employee);
     }
