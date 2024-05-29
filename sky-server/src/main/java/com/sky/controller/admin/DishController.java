@@ -53,11 +53,24 @@ public class DishController {
         return Result.success(pageResult);
     }
 
-
     @DeleteMapping
     public Result delete(@RequestParam List<Long> ids){
         log.info("删除菜品:{}", ids);
         dishService.deleteBatch(ids);
+        return Result.success();
+    }
+
+    @GetMapping("/{id}")
+    public Result<DishVO> getDishById(@PathVariable Long id){
+        log.info("根据id查询菜品:{}", id);
+        DishVO dishVO = dishService.getDishVOById(id);
+        return Result.success(dishVO);
+    }
+
+    @PutMapping
+    public Result update(@RequestBody DishDTO dishDTO){
+        log.info("修改菜品:{}", dishDTO);
+        dishService.updateWithFlavor(dishDTO);
         return Result.success();
     }
 }
