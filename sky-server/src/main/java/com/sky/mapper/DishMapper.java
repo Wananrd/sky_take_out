@@ -27,6 +27,8 @@ public interface DishMapper {
     @Select("select * from sky_take_out.dish")
     List<DishVO> list();
 
+    List<Dish> listByDish(Dish dish);
+
     List<DishVO> pageQuery(DishPageQueryDTO dishPageQueryDTO);
 
     /**
