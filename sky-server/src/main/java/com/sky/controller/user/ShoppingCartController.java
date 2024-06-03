@@ -24,6 +24,7 @@ public class ShoppingCartController {
      */
     @GetMapping("/list")
     public Result<List<ShoppingCart>> list(){
+        log.info("展示购物车内容");
         List<ShoppingCart> list = shoppingCartService.showShoppingCart();
         return Result.success(list);
     }
