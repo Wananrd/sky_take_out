@@ -4,6 +4,7 @@ import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.entity.OrderDetail;
 import com.sky.entity.Orders;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.core.annotation.Order;
 
@@ -32,4 +33,10 @@ public interface OrderMapper {
     Orders getById(Long id);
 
     void update(Orders orders);
+
+    @Select("select * from sky_take_out.orders where status=#{status} and order_time < #{time};")
+    List<Orders> getByStatusAndOrderTimeLT(Integer status, LocalDateTime time);
+
+    @Select("select * from sky_take_out.orders where number=#{orderNumber};")
+    Orders getByOrderNumber(String orderNumber);
 }
